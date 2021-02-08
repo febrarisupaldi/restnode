@@ -23,7 +23,7 @@ exports.detailsCity = function (req, res){
         if(error){
             connection.log(error);
         }else{
-            response.ok(rows, res)
+            response.ok2(rows, res)
         }
     });
 }
