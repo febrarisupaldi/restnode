@@ -7,5 +7,8 @@ module.exports = function (app) {
         .get(myjson.index);
 
     app.route('/city')
-        .get(myjson.showAllCity);
+        .get(myjson.allCity);
+
+    app.route('/city/:id')
+        .get(myjson.detailsCity);
 }
