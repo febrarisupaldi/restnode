@@ -11,4 +11,7 @@ module.exports = function (app) {
 
     app.route('/city/:id')
         .get(myjson.detailsCity);
+
+    app.route('/city')
+        .post(myjson.addCity);
 }

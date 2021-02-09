@@ -27,3 +27,20 @@ exports.detailsCity = function (req, res){
         }
     });
 }
+
+exports.addCity = function (req, res) {
+    var code = req.body.city_code;
+    var name = req.body.city_name;
+    var state =req.body.state_id;
+    var created = req.body.created_by;
+
+    connection.query("insert into precise.city (city_code, city_name, state_id, created_by) values(?,?,?)", [code, name, state, created],
+        function(error, rows, fields){
+            if(error){
+                console.log(error);
+            }else{
+                response.ok("City successfully added", res);
+            }
+        }
+    );
+}
