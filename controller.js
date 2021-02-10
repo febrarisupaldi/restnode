@@ -19,13 +19,15 @@ exports.allCity = function (req, res) {
 
 exports.detailsCity = function (req, res){
     let id = req.params.id;
-    connection.query('select city_code, city_name, state_id from precise.city where city_id = ?', [id], function(error, rows, fields){
-        if(error){
-            connection.log(error);
-        }else{
-            response.ok2(rows, res)
+    connection.query('select city_code, city_name, state_id from precise.city where city_id = ?', [id], 
+        function(error, rows, fields){
+            if(error){
+                connection.log(error);
+            }else{
+                response.ok2(rows, res)
+            }
         }
-    });
+    );
 }
 
 exports.addCity = function (req, res) {
@@ -34,7 +36,7 @@ exports.addCity = function (req, res) {
     var state =req.body.state_id;
     var created = req.body.created_by;
 
-    connection.query("insert into precise.city (city_code, city_name, state_id, created_by) values(?,?,?)", [code, name, state, created],
+    connection.query("insert into precise.city (city_code, city_name, state_id, created_by) values(?,?,?,?)", [code, name, state, created],
         function(error, rows, fields){
             if(error){
                 console.log(error);
@@ -43,4 +45,36 @@ exports.addCity = function (req, res) {
             }
         }
     );
+}
+
+exports.updateCity = function(req, res) {
+    var id = req.body.city_id;
+    var code = req.body.city_code;
+    var name = req.body.city_name;
+    var state =req.body.state_id;
+    var updated = req.body.updated_by;
+
+    connection.query("update precise.city set city_code=?, city_name=?, state_id=?, updated_by=? where city_id=?", [code, name, state, updated, id],
+        function(error, rows, fields){
+            if(error){
+                console.log(error);
+            }else{
+                response.ok("City successfully updated", res);
+            }
+        }
+    );
+}
+
+exports.deleteCity = function (req, res) {
+    let id = req.params.id;
+    connection.query("delete from precise.city where city_id = ?", [id],
+        function(error, rows, fields){
+            if(error){
+                console.log(error);
+            }else{
+                response.ok("City successfully deleted", res);
+            }
+        }
+    );
+
 }
