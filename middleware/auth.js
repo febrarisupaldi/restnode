@@ -5,16 +5,15 @@ var response = require('../res');
 var jwt = require('jsonwebtoken');
 var config = require('../config/secret');
 var ip = require('ip');
-var salt = bcrypt.genSalt(10);
 
 exports.addUser = function(req, res) {
     var post = {
         user_id : req.body.user_id,
-        password : bcrypt(req.body.password, 10)
+        password : bcrypt.hashSync(req.body.password, 10)
     };
     
-    var query = "select user_id from ?? where ??";
-    var table = ["users", "email", post.user_id];
+    var query = "select user_id from ?? where ?? = ?";
+    var table = ["precise.users", "user_id", post.user_id];
 
     query = mysql.format(query, table);
 
@@ -22,9 +21,10 @@ exports.addUser = function(req, res) {
         if(error){
             console.log(error);
         }else{
+            // response.ok(rows.length, res);
             if(rows.length == 0){
                 var query = "insert into ?? set ?";
-                var table = ["users"];
+                var table = ["precise.users"];
                 query = mysql.format(query, table);
                 connection.query(query, post, function(error, rows){
                     if(error){
@@ -34,7 +34,7 @@ exports.addUser = function(req, res) {
                     }
                 });
             }else{
-                response.ok("User sudah ada");
+                response.ok("User sudah ada", res);
             }
         }
     });
