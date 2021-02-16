@@ -2,6 +2,7 @@
 
 var response = require('./res');
 var connection = require('./connection');
+var bcrypt = require('bcrypt');
 
 exports.index = function (req, res){
     response.ok("Application working", res);
@@ -76,5 +77,31 @@ exports.deleteCity = function (req, res) {
             }
         }
     );
+}
 
+exports.login = function(req, res) {
+    var id = req.body.user_id;
+    var password = req.body.password;
+    connection.query("select password from precise.users where user_id=?", [id],function(error, rows, fields){
+        if(error){
+            console.log(error);
+        }else{
+            if(rows.length != 0){
+                var password_db = rows[0].password;
+                //var hash_bcrypt = bcrypt.hashSync(req.body.password, 10);
+                password_db = password_db.replace('$2y$', '$2b$');
+                var data = {
+                    pass_node : password_db,
+                    // pas_node : hash_bcrypt,
+                    result : bcrypt.compareSync(password, password_db)
+                }
+                // response.ok(data, res);
+                // var result = bcrypt.compareSync(password, password_db);
+                response.ok(data,res);
+            }
+            else{
+                response.ok('Tidak ada Username yang cocok', response);
+            }
+        }
+    });
 }

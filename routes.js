@@ -20,4 +20,7 @@ module.exports = function (app) {
 
     app.route('/city/:id')
         .delete(myjson.deleteCity);
+
+    app.route('/login')
+        .post(myjson.login);
 }
